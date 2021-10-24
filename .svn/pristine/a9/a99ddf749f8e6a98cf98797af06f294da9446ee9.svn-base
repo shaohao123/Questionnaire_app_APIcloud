@@ -1,0 +1,16 @@
+<template>
+    <view>
+        <img src="../image/star.png" alt="">
+    </view>
+</template>
+
+<script>
+export default {
+    name:'star'
+
+}
+</script>
+
+<style>
+
+</style>

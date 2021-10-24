@@ -1,0 +1,156 @@
+<!--不同类型题目组件-->
+<template name='question'>
+    <scroll-view class="page">
+		<view class="question_item" @click="gotoQuestionDetail">
+			<view class="question_item_title">
+				<text><text class="is_required">*</text>{{questionInfo.title || '题目名称'}}</text>
+				<img src="../../image/deng.png" class="item_icon" alt="action" @click="handleQuestion('radio')" v-if="!isPreview"/>
+			</view>
+			<!--单选题-->
+			<radio-group v-if="questionInfo.type === 'radio'" :disabled="questionInfo.disabled">
+				<label
+					class="option_item"
+					v-for="item in questionInfo.options"
+					:key="item.id">
+					<radio color="#333" :value="item.id" class="option_icon" v-if="!isPreview"/>
+					<img src="../image/radio.png" alt="radio" class="option_icon" v-else/>
+					<text class="option_text">{{item.text}}</text>
+				</label>
+			</radio-group>
+			<!--多选题-->
+			<checkbox-group v-else-if="questionInfo.type === 'check'" :disabled="questionInfo.disabled">
+				<label
+					class="option_item"
+					v-for="item in questionInfo.options"
+					:key="item.id">
+					<checkbox color="#333" :value="item.id" class="option_icon" v-if="!isPreview"/>
+					<img src="../image/check.png" alt="check" class="option_icon" v-else/>
+					<text class="option_text">{{item.text}}</text>
+				</label>
+			</checkbox-group>
+			<!--问答题-->
+			<textarea
+				class="question_textarea"
+				:value="questionInfo.value"
+				placeholder="请输入~"
+				maxlength="500"
+				:disabled="questionInfo.disabled"
+				v-else-if="questionInfo.type === 'ask'"/>
+			<!--评分题-->
+			<score
+				:value="0"
+				v-else-if="questionInfo.type === 'score'"
+				lowDesc="不满意"
+				highDesc="非常满意"/>
+		</view>
+    </scroll-view>
+</template>
+
+
+
+<script>
+import {openTabLayout, myAjax} from '../script/utils';
+import {questionListUrl} from '../script/constant'
+import './score.stml';
+export default {
+	name: 'question',
+	props: {
+		questionInfo: {
+			type: Object,
+			default: () => {}
+		},
+		isPreview: {
+			type: Boolean,
+			default: false
+		}
+	},
+	apiready(){//like created
+
+	},
+	data() {
+		return{
+
+		}
+	},
+	methods: {
+		handleQuestion(type) {
+			const questionInfo = this.questionInfo;
+			api.actionSheet({
+				buttons: ['复制题目', '删除题目']
+			}, function(ret, err) {
+				var index = ret.buttonIndex;
+				if (index === 1) {
+					myAjax(questionListUrl, 'post', questionInfo).then(res => {
+						api.toast({msg: '复制成功~'})
+					}).catch(err => {
+						 api.toast({msg: JSON.stringify(err)});
+					});
+				} else {
+					myAjax(questionListUrl, 'delete', questionInfo).then(res => {
+						api.toast({msg: '删除成功~'})
+					}).catch(err => {
+						 api.toast({msg: JSON.stringify(err)});
+					});
+				}
+			});
+		},
+		// 点击每一个题目进入到该题目详情编辑页面
+		gotoQuestionDetail() {
+			if (!this.isPreview) {
+				const type = this.questionInfo.type;
+				api.toast({
+					msg: JSON.stringify(this.questionInfo)
+				})
+				openTabLayout(type, '../../pages/create/createQuestion.stml', '添加题目', {type});
+			}
+			
+		}
+	}
+}
+</script>
+
+
+
+<style>
+.is_required {
+	color: #f00;
+}
+.question_item {
+	background: #fff;
+	padding: 16px 20px;
+	margin-bottom: 10px;
+}
+.question_item_title {
+	flex-direction: row;
+	align-items: center;
+	justify-content: space-between;
+	font-weight: 500;
+	color: #E02020;
+	line-height: 20px;
+	font-size: 14px;
+}
+.item_icon {
+	width: 20px;
+	height: 20px;
+}
+.option_item {
+	margin-top: 16px;
+}
+.option_icon {
+	width: 20px;
+	height: 20px;
+	margin-right: 3px;
+}
+.option_text {
+	font-size: 14px;
+	font-weight: 400;
+	color: #333842;
+}
+.question_textarea {
+	width: 100%;
+	background: #f5f5f5;
+	padding: 10px 12px;
+	border-radius: 5px;
+	border: none;
+}
+</style>

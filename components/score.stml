@@ -1,0 +1,65 @@
+<!--评分组件-->
+<template name='score'>
+	<view class="score_con">
+
+		
+		<view class="star_con">
+			<view v-for="item in list" class="score_item">
+				<img class="score_img" :src="`../../image/${item <= value ? 'starActive' : 'star'}.png`"
+					@click="updateScore(item)" />
+			</view>
+		</view>
+
+
+		<view class="score_desc">
+			<text>{{lowDesc}}</text>
+			<text>{{highDesc}}</text>
+		</view>
+	</view>
+</template>
+<script>
+export default {
+	name: 'score',
+	apiready() {//like created
+
+	},
+	props: {
+		isEdit: Boolean,
+		value: Number,
+		lowDesc: String,
+		highDesc: String
+	},
+	data() {
+		return {
+			list: [1, 2, 3, 4, 5]
+		}
+	},
+	methods: {
+		// 我想实现的是什么功能？ 
+		// 当我点击灰色星星的时候，会给item里边的传递一个参数
+		updateScore(item) {
+			this.fire('updateScore1', item);
+		}
+	}
+}
+</script>
+<style>
+.star_con {
+	flex-direction: row;
+}
+.score_item {
+	flex: 1;
+	text-align: center;
+}
+.score_img {
+	width: 30px;
+	height: 30px;
+}
+.score_desc {
+	height: 40px;
+	flex-direction: row;
+	align-items: center;
+	justify-content: space-between;
+	background: #ff0;
+}
+</style>

@@ -1,0 +1,62 @@
+<!--入口页，   第一个界面-->
+<template name='tpl'>
+	<view class="create_content">
+		<img src="../../image/create_bg.png" alt="bg">
+		<view class="create_bottom"> 
+			<text class="create_tip">创建问卷，一步即可搞定</text>
+			<button class="btn create_btn" @click="creatNewQuestion">创建新问卷-1</button>
+		</view>
+	</view>
+</template>
+
+<script>
+import {openTabLayout} from "../../script/utils"
+export default {
+	name: "tpl",
+	apiready() {
+
+	},
+	methods: {
+		creatNewQuestion() {
+			// console.log("点击了“1.我的问卷-创建新问卷”")
+			openTabLayout("newQuestion","./newQuestion.stml","我的问卷2")
+		}
+	}
+}
+</script>
+
+
+<style scoped>
+.create_content{
+	width: 100%;
+	height: 100%;
+	background: rgb(115, 173, 221);
+	justify-content: flex-end;
+
+
+}
+.create_bottom{
+	padding: 50px 0;
+	background: #fff;
+	border-radius: 20px 20px 0px 0px;
+	align-items: center;
+}
+.create_tip{
+	text-align: center;
+	font-weight: 500;
+	margin-top: -20px;
+	font-size: 18px;
+}
+.btn {
+	background-color: rgb(57, 86, 139);
+	font-size: 20px;
+	font-weight: bold;
+	height: 50px;
+	width: 60%;
+	/* display: flex; */
+	/* justify-content: center; */
+	/* align-items: center; */
+	margin: 20px auto;
+	color: #fff;
+}
+</style>

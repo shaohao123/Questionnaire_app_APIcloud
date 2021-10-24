@@ -1,0 +1,110 @@
+<!--问卷有效期界面   第12个界面-->
+<template>
+	<!-- 最外边的边框 -->
+	<view style="margin:20px 25px">
+		<!-- 包着 永久有效 和 指定有效期 的框框-->
+		<view>
+			<radio-group onChange={this.update_indate}>
+				<label class="distance">
+					<radio value="永久有效" :checked="checked_permanent_judge" />
+					<text>永久有效</text>
+				</label>
+				<label class="distance">
+					<radio value="指定有效期" :checked="checked_you_decide_judge" />
+					<text>指定有效期</text>
+				</label>
+			</radio-group>
+		</view>
+		<!-- 包含 开始时间 和 结束时间 -->
+		<view >
+			<!-- 开始时间 -->
+			<view class="row_show distance">
+				<view>
+					<text>
+						开始时间
+					</text>
+				</view>
+				<view class="row_show" style="margin-left:auto" @click="start_time">
+					<view>
+						<text>
+							2021.08.27 16:45
+						</text>
+					</view>
+					<view style="margin:auto 5px">
+						<img src="../../image/jiantou.png" style="width:15px ; height:15px">
+					</view>
+				</view>
+
+			</view>
+			<!-- 结束时间 -->
+			<view class="row_show distance">
+				<view>
+					<text>
+						结束时间
+					</text>
+				</view>
+				<view class="row_show" style="margin-left:auto" @click="end_time">
+					<view>
+						<text>
+							2021.08.30 16:45
+						</text>
+					</view>
+					<view style="margin:auto 5px">
+						<img src="../../image/jiantou.png" style="width:15px ; height:15px">
+					</view>
+				</view>
+			</view>
+		</view>
+	</view>
+</template>
+
+<script>
+export default {
+	name: "indate",
+	apiready() {
+		this.addNavClickListener();
+		// 问卷有效期 监听
+		this.judgeValidPeriodState();
+	},
+	data() {
+		return {
+			checked_permanent_judge: null,
+			checked_you_decide_judge: null,
+			time_show: null
+
+		}
+	},
+	methods: {
+		//顶部导航栏的关闭
+		addNavClickListener() {
+			api.addEventListener({
+				name: 'navitembtn'
+			}, function (ret, err) {
+				api.closeWin();
+			});
+		},
+		// 监听事件-【setting--->>indate】 先接收传来的参数---pageParam
+		judgeValidPeriodState() {
+			api.pageParam.key == "永久有效" || api.pageParam.key == null ? this.data.checked_permanent_judge = true : this.data.checked_you_decide_judge = true;
+		},
+		// 发送事件-【setting<<---indate】 后向上传递参数
+		update_indate(e) {
+			api.sendEvent({
+				name: 'update_indate',
+				extra: { key: e.detail.value }
+			})
+		},
+	}
+}
+</script>
+
+<style>
+.row_show {
+	flex-direction: row;
+}
+.distance {
+	margin-bottom: 30px;
+	border-bottom: 1px solid #e9ecf3;
+	padding-bottom: 8px;
+}
+</style>

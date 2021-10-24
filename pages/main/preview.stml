@@ -1,0 +1,44 @@
+<!--预览/答题问卷页面-->
+<template name='preview'>
+	<view class="preview">
+		<scroll-view class="preview">
+			<view class="preview_top">
+				<text class="question_name">用户数据征集</text>
+				<text class="question_desc">您的建议会让我们做得更好，感谢您的配合!</text>
+			</view>
+		</scroll-view>
+		<button class="submit_answer_btn" @click="submitAnswer" v-if="!isPreview">提交</button>
+	</view>
+</template>
+<script>
+
+import {addListenNaviteBtn, openTabLayout} from '../../script/utils';
+export default {
+	name: 'preview',
+	apiready(){//like created
+		addListenNaviteBtn();
+	},
+	data() {
+		return{
+
+		}
+	},
+	computed: {
+		questionList() {
+			return api.pageParam.questionList || []
+		},
+		// true为预览，false为答题页面
+		isPreview() {
+			return api.pageParam.isPreview;
+		}
+	},
+	methods: {
+		submitAnswer() {
+			openTabLayout('answerSucc', './answerSucc.stml', '');
+		}
+	}
+}
+</script>
+<style>
+    
+</style>

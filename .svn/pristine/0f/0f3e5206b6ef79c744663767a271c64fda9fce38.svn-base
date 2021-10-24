@@ -1,0 +1,161 @@
+<template name="tpl">
+	<view class="add_question">
+		<scroll-view class="add_question_con" scroll-y="">
+			<form class="add_form">
+				<!--  导航栏下边的第一行，展示type的value的：radio check ...-->
+				<text>{{questionType}}</text>
+				<!-- 展示了第二行 一个icon 和 type 的label的： 单选题、多选题...-->
+				<view class="form_item form_item_title">
+					<text>{{questionTypeName}}</text>
+				</view>
+				<!-- 因为题目的样式都一样。所以，可以用公共格式 -->
+				<view class="form_item">
+					<text class="form_item_label">题目</text>
+					<input name="input" placeholder="请输入题目名称" class="form_item_con" />
+				</view>
+
+
+				<!-- 下边建一个单选题/多选题的表单 -->
+				<view class="form_item" v-if="['radio', 'check'].includes(questionType)">
+					<text class="form_item_label">选项</text>
+					<!-- v-for用来操控删除和添加选项按钮的 -->
+					<view v-for="(item, index) in formInfo.options" class="form_item_option">
+						<text @click="removeOption(index)">delete</text>
+						<input name="input" placeholder="请输入选项内容" class="form_item_con" />
+					</view>
+					<text @click="addOption">+ 添加选项</text>
+				</view>
+
+				<!-- 下边是问答题 -->
+				<view class="form_item" v-if="questionType === 'ask'">
+					<text class="form_item_label">输入框提示</text>
+					<input name="input" placeholder="默认提示'请输入'" class="form_item_con" />
+				</view>
+
+				<!-- 下边是评分题 -->
+				<view class="form_item" v-if="questionType === 'score'">
+					<!-- score1 是自定义的组件 -->
+					<score1  @updateScore2="updateScore" class="form_item" />
+
+					<view class="form_item">
+						<text class="form_item_label">低分描述</text>
+						<input name="input" placeholder="请输入" class="form_item_con" />
+					</view>
+
+					<view class="form_item">
+						<text class="form_item_label">高分描述</text>
+						<input name="input" placeholder="请输入" class="form_item_con" />
+					</view>
+
+				</view>
+
+				<!-- 最下边那块 -->
+				<view class="form_item">
+					<text class="form_item_label">题目设置</text>
+					<view>
+						<text>此项必填</text>
+						<!-- switch的固定用法 -->
+						<switch onchange={this.updateRequired} />
+					</view>
+				</view>
+			</form>
+		</scroll-view>
+		<button @click="clickSubmitBtn" class="submit_btn">确定111111111</button>
+	</view>
+</template>
+
+<script>
+import '../../components/score1.stml'
+import { QUESTION_TYPE } from '../../script/constant';
+export default {
+	name: "createQuestion",
+	apiready() {
+		this.addNavClickListener();
+	},
+	data() {
+		return {
+			formInfo: {
+				// sccore组件里定义的，可以不写
+				title: null,
+				// 数组里边对应着的是每有一个元素，就有一个delete的横条
+				options: ["", ""],
+				// “此项必填” 的开关
+				isRequire: false,
+				// 控制评分描述的几个星星亮的
+				score: 2,
+			}
+		}
+	},
+	methods: {
+		//顶部导航栏的关闭
+		addNavClickListener() {
+			api.addEventListener({
+				name: 'navitembtn'
+			}, function (ret, err) {
+				api.closeWin();
+			});
+		},
+		// 对应单选多选的添加选项
+		addOption() {
+			this.formInfo.options.push(null)
+		},
+		// 对应单选多选的删除选项
+		removeOption(index) {
+			this.formInfo.options.splice(index, 1);
+		},
+		// 评价的点亮了几颗星
+		updateScore(e) {
+			this.formInfo.score = e.detail;
+
+		},
+		// 此项必填按钮
+		updateRequired(e) {
+			this.formInfo.isRequire = e.detail.value
+		},
+
+		// 点击最下边的确定按钮
+		clickSubmitBtn() {
+			api.toast({
+				msg: '确认提交啦~~~~~' + JSON.stringify(this.formInfo)
+			})
+		},
+	},
+	// 计算属性用于提取newquestion的页面点击的参数数据
+	computed: {
+		// 题目类型
+		questionType() {
+			return api.pageParam.type || null
+		},
+		questionTypeName() {
+			const cur = QUESTION_TYPE.find(item => item.value === this.questionType);
+			return cur.lable
+		}
+	}
+}
+</script>
+
+<style>
+.add_question {
+	height: 100%;
+	width: 100%;
+}
+.add_question_con {
+	flex: 1;
+}
+.form_item_option {
+	flex-direction: row;
+}
+.form_item_title {
+	flex-direction: row;
+	align-items: center;
+}
+.type_icon {
+	margin-right: 12px;
+}
+.submit_btn {
+	height: 45px;
+	line-height: 45px;
+	background: skyblue;
+	color: #fff;
+}
+</style>

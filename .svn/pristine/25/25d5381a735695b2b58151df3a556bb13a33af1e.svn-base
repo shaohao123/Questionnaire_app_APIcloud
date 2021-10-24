@@ -1,0 +1,17 @@
+<template>
+	<view>
+		<question info="zheshiyiduani"></question>
+	</view>
+</template>
+<style>
+</style>
+<script>
+export default {
+	name: 'test',
+	apiready() {
+	},
+	methods: {
+	
+	}
+}
+</script>

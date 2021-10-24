@@ -1,0 +1,81 @@
+<!--每位用户填写次数   第13个界面-->
+<template>
+	<view class="outside_frame">
+		<radio-group class="radio-group" onChange={this.radiogroupChanged}>
+			<label class="item">
+				<radio :checked="checkedNoLimit" value="不限制" />
+				<text>不限制</text>
+			</label>
+			<label class="item">
+				<radio :checked="checkedOnce" value="每位用户可填写一次" />
+				<text>限制每名用户可填写一次</text>
+			</label>
+		</radio-group>
+	</view>
+</template>
+
+<script>
+export default {
+	name: "navitembtn",
+	apiready() {
+		this.addNavClickListener();
+		// 刚进到这个界面获取到之前选择的用户可填写次数 是哪一个 目的是把前面的两个圈圈标记上
+		this.judgeFillCountState();
+	},
+	data() {
+		return {
+			checkedNoLimit: null,
+			checkedOnce: null
+		}
+	},
+	methods: {
+		//顶部导航栏的关闭
+		addNavClickListener() {
+			api.addEventListener({
+				name: 'navitembtn'
+			}, function (ret, err) {
+				api.closeWin();
+
+			});
+		},
+
+
+
+
+
+		// 监听事件-【setting--->>fillcount】 先接收传来的参数
+		judgeFillCountState() {
+			_this = this
+			api.addEventListener({
+				name: 'judgeFillCountState_name'
+			}, function (ret, err) {
+				ret.value.key == "不限制" || ret.value.key == null ? _this.data.checkedNoLimit = true : _this.data.checkedOnce = true;
+			});
+
+		},
+		// 发送事件-【setting<<---fillcount】 后向上传递参数---radio
+		radiogroupChanged(e) {
+			api.sendEvent({
+				name: 'FillCountTimes',
+				extra: { key: e.detail.value }
+			})
+			// api.closeWin()
+		},
+	}
+}
+</script>
+
+
+<style>
+.outside_frame {
+	margin: 16px 20px;
+}
+.item {
+	margin: 10px;
+	border-bottom: 1px solid #e9ecf3;
+	padding-bottom: 8px;
+}
+text {
+	font-size: 15px;
+}
+</style>

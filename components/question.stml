@@ -1,0 +1,143 @@
+<template>
+	<view>
+		<view style="margin:10px 25px ">
+			<scroll-view>
+				<!-- 单选题 -->
+				<view 
+				class="multiple_choice" 
+				style="margin-bottom:50px"
+				v-if="this.props.info.show.isShowSingle === 'show'"
+				>
+					<view class="multiple_choice_text">
+						<text style="font-size:17px; ">1.(单选题)你的名字</text>
+					</view>
+					<view>
+						<view style="opacity:0.5;">
+							<view style="margin-top:10px">
+								<text style="font-size:15px">选项1</text>
+							</view>
+							<view style="margin-top:10px">
+								<text style="font-size:15px">选项2</text>
+							</view>
+							<view style="margin-top:10px">
+								<text style="font-size:15px">选项3</text>
+							</view>
+							<view style="margin-top:10px">
+								<text style="font-size:15px">选项4</text>
+							</view>
+						</view>
+
+					</view>
+
+				</view>
+				<!-- 多选题 -->
+				<view 
+				class="multiple_choice" 
+				style="margin-bottom:50px"
+				v-if="this.props.info.show.isShowMultiple === 'show'"
+				>
+					<view class="multiple_choice_text">
+						<text style="font-size:17px;">2.(多选题)你的名字</text>
+					</view>
+					<view>
+						<view style="opacity:0.5;">
+							<view style="margin-top:10px">
+								<text style="font-size:15px">选项1</text>
+							</view>
+							<view style="margin-top:10px">
+								<text style="font-size:15px">选项2</text>
+							</view>
+							<view style="margin-top:10px">
+								<text style="font-size:15px">选项3</text>
+							</view>
+							<view style="margin-top:10px">
+								<text style="font-size:15px">选项4</text>
+							</view>
+						</view>
+
+					</view>
+
+				</view>
+				<!-- 问答题 -->
+				<view 
+				class="multiple_choice" 
+				style="margin-bottom:50px"
+				v-if="this.props.info.show.isShowAsk === 'show'"
+				>
+					<view class="multiple_choice_text">
+						<text style="font-size:17px;">3.(问答题)这里是问答题的题目</text>
+					</view>
+					<view>
+						<input type="text" placeholder="请输入和题目相关的回答" 
+							style="margin-top:10px;width:100%;height:80px;border:1px solid #fff;font-size:15px">
+					</view>
+				</view>
+				<!-- 评分题 -->
+				<view 
+				class="multiple_choice" 
+				style="margin-bottom:50px"
+				v-if="this.props.info.show.isShowJudge === 'show'"
+				>
+					<view class="multiple_choice_text">
+						<text style="font-size:17px;margin-bottom:30px ">4.(评分题)这里是评分题哦</text>
+					</view>
+					<view>
+						<view style="width:75%;margin:auto">
+							<view style="flex-direction: row;justify-content:space-between">
+								<view v-for="item in [1, 2, 3, 4, 5]">
+									<img :src="`../../image/${item <= value ? 'starActive' : 'star'}.png`"
+										style="height:22px;width:22px;">
+								</view>
+							</view>
+							<view style="flex-direction: row;justify-content:space-between;margin-top:8px">
+								<view>
+									<text style="font-size:15px;opacity:0.5">低分</text>
+								</view>
+								<view>
+									<text style="font-size:15px;opacity:0.5">高分</text>
+								</view>
+							</view>
+						</view>
+					</view>
+				</view>
+			</scroll-view>
+		</view>
+	</view>
+</template>
+
+<script>
+import { openTabLayout } from '../script/utils'
+export default {
+	name: "question",
+	apiready(){
+		// 刚返回这个接麦你的时候就接收到父组件的参数
+		this.initInfo()
+	},
+	// 获取父的参数的，我先在这里定义好要接收的参数类型
+	props: {
+		info: Object,//传递的内容
+		isPreview: Boolean//进入到预览界面
+	},
+	data() {
+		return ({
+			// 下边这个是动态的亮的星星的个数
+			value: 3,
+			// 
+			showSingle:1,
+			showMultiple:2,
+			showAsk:3,
+			showJudge:4
+
+		})
+	},
+	methods: {
+		initInfo(){
+			console.log("输出")
+		},
+	}
+
+}
+</script>
+
+<style>
+</style>

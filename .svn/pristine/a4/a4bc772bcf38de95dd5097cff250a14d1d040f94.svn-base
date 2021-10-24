@@ -1,0 +1,166 @@
+<!--发布成功页   第六个界面-->
+<template class="tpl">
+	<view class="pub">
+		<!-- 上半部分 -->
+		<view class="pub_header">
+			<view class="pub_publish_suc">
+				<img class="publish_suc_img" src="../../image/publishsuc.png">
+				<text>发布成功</text>
+			</view>
+			<view class="pub_enter">
+				<view class="pub_enter_style">
+					<button class="btn" @click="pub_ensure">确定</button>
+				</view>
+			</view>
+		</view>
+		<!-- 中间部分 -->
+		<view class="pub_middle">
+			<view class="pub_share">
+				<view class="pub_share_text">
+					<text class="share_ques">- - - - - - - ···分享问卷··· - - - - - - - </text>
+				</view>
+				<view class="pub_share_uponways">
+					<text class="share_ques_way">你可以通过以下方式分享问卷</text>
+				</view>
+			</view>
+		</view>
+		<!-- 下半部分 -->
+		<view class="pub_bottom">
+			<view class="pub_share_ways" @click="share_to_colleage">
+				<view class="pub_icon_colleage">
+					<img class="pub_share_img" src="../../image/colleage.png" alt="">
+				</view>
+				<text>同事</text>
+			</view>
+			<view class="pub_share_ways" @click="share_to_workcircle">
+				<view class="pub_icon_workcicle">
+					<img class="pub_share_img" src="../../image/workcicle.png" alt="">
+				</view>
+				<text>工作圈</text>
+			</view>
+			<view class="pub_share_ways" @click="share_to_copylink">
+				<view class="pub_icon_copylink">
+					<img class="pub_share_img" src="../../image/copylink.png" alt="">
+				</view>
+				<text>复制链接</text>
+			</view>
+		</view>
+	</view>
+</template>
+
+<script>
+export default {
+	name: "publish",
+	apiready() {
+		this.addNavClickListener();
+	},
+	methods: {
+		//顶部导航栏的关闭
+		addNavClickListener() {
+			api.addEventListener({
+				name: 'navitembtn'
+			}, function (ret, err) {
+				api.closeWin();
+			});
+		},
+		// 发布成功关闭页面“确定按钮”
+		pub_ensure() {
+			api.closeWin()
+		},
+		share_to_colleage() {
+			api.toast({ msg: "通过同事分享" })
+		},
+		share_to_workcircle() {
+			api.toast({ msg: "通过工作圈分享" })
+		},
+		share_to_copylink() {
+			api.toast({ msg: "复制链接" })
+		}
+
+
+	}
+
+}
+</script>
+
+<style>
+.publish_suc_img {
+	width: 70px;
+	height: 70px;
+}
+.pub_share_img {
+	width: 28px;
+	height: 28px;
+	margin: auto;
+}
+
+.pub_header {
+	width: 100%;
+	height: 50%;
+	justify-content: center;
+	align-items: center;
+}
+
+.btn {
+	width: 245px;
+	background-color: #588bff;
+	border-radius: 50%;
+	height: 44px;
+	margin: 50px 0;
+	color: white;
+	font-weight: 700;
+}
+/* 中间部分 */
+.pub_middle {
+	width: 100%;
+	height: 30%;
+	justify-content: center;
+	align-items: center;
+	margin-top: -50px;
+}
+.pub_share_text {
+	margin: 20px 0;
+}
+.pub_share_uponways {
+	opacity: 0.5;
+}
+
+.pub_bottom {
+	flex-direction: row;
+	justify-content: space-around;
+}
+.pub_share {
+	justify-content: center;
+	align-items: center;
+}
+.share_ques {
+	font-size: 20px;
+	font-weight: border;
+}
+
+.pub_icon_copylink {
+	background-color: #3371ff;
+	width: 60px;
+	height: 60px;
+	border-radius: 50%;
+	margin: 15px;
+}
+.pub_icon_workcicle {
+	background-color: #e14c46;
+	width: 60px;
+	height: 60px;
+	border-radius: 50%;
+	margin: 15px;
+}
+.pub_icon_colleage {
+	background-color: #fec60a;
+	width: 60px;
+	height: 60px;
+	border-radius: 50%;
+	margin: 15px;
+}
+/* 设置 “同事、工作圈、复制链接”  居中 */
+.pub_share_ways {
+	align-items: center;
+}
+</style>

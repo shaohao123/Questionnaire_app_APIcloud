@@ -1,0 +1,62 @@
+<template class="score">
+	<view class="score_con">
+
+
+		<!-- 图片的五角星部分 -->
+		<view class="score_star">
+			<view class="img_star" v-for="item in list">
+				<img class="score_img" :src="`../../image/${item <= value ? 'starActive' : 'star'}.png`"
+					@click="updateScore(item)">
+
+			</view>
+		</view>
+
+
+		<!-- 低分高分部分 -->
+		<view class="score_text">
+			<text>低分描述1</text>
+			<text>高分描述2</text>
+		</view>
+	</view>
+</template>
+
+<script>
+export default {
+	name: "score1",
+	apiready() {
+
+	},
+	props:{
+		value:Number
+	},
+	data() {
+		return {
+			list: [1, 2, 3, 4, 5],
+            value: 2,
+		}
+	},
+	methods: {
+		updateScore(item) {
+			this.fire('updateScore2', item);
+            this.value = item
+
+		}
+	}
+}
+</script>
+
+<style>
+
+.score_star {
+	flex-direction: row;
+}
+.score_img {
+	height: 30px;
+	width: 30px;
+}
+.score_text {
+	flex-direction: row;
+	justify-content: space-between;
+    background-color: #bfa;
+}
+</style>

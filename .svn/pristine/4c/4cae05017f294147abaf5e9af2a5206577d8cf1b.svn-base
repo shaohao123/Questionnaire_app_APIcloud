@@ -1,0 +1,348 @@
+<!--新建问卷入口页《我的问卷》   第二个界面-->
+<template>
+	<view class="create">
+		<scroll-view class="create_con" scroll-y>
+			<view class="create_question_btn" @click="handleInputDesc">
+				<view class="creat_title">
+					<text class="input_title">{{this.data.questionTitle ||
+						"点击此处添加题目"}}</text>
+				</view>
+				<view class="creat_describe">
+					<text class="input_placeholder">{{this.data.questionContent ||
+						"点击此处添加描述"}}</text>
+				</view>
+			</view>
+
+			<view class="add_question_btn" @click="handleAddTitle" v-if="show === 'show'">
+				<text class="add_text"> ＋ 添加题目-版本1</text>
+			</view>
+
+
+
+
+
+
+
+
+
+
+
+			<!-- 引入question组件 -->
+			<question v-if="isLook === 'getdata'" :info='formInfo'></question>
+
+
+
+
+
+
+
+
+
+
+
+
+			<view class="add_question_btn" @click="handleAddTitle_z">
+				<text class="add_text"> ＋ 添加题目-版本2</text>
+			</view>
+		</scroll-view>
+
+		<view class="create_footer row_show">
+			<view class="footer_btn" @click="clickFooterBtn_setting">
+				<img src="../../image/setting.png" class="footer_btn_icon" />
+				<text class="footer_btn_text">设置</text>
+			</view>
+			<view class="footer_btn" @click="clickFooterBtn_preview">
+				<img src="../../image/preview.png" class="footer_btn_icon" />
+				<text class="footer_btn_text">预览</text>
+			</view>
+			<button class="publish_btn" @click="clickFooterBtn_publish">发布</button>
+		</view>
+
+	</view>
+</template>
+
+<script>
+import '../../components/question.stml';
+import { openTabLayout } from "../../script/utils";
+import { QUESTION_TYPE } from "../../script/constant";
+export default {
+	name: "newQuestion",
+	apiready() {
+		this.addNavClickListener();
+		this.addListenSaveDesc()
+		// 接收来自新建问卷题目的数据
+		this.addListenCreatSbject()
+
+	},
+	data() {
+		return {
+			// 用来接收创建页面时候的题目和题目描述传过来的数据
+			questionTitle: "",
+			questionContent: "",
+			show: null,
+			// 判断能不能看见创建好的问题页面
+			isLook: "getdata",
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			// 要传给组件question的数据
+			formInfo: {
+				// 改变question组件里的显示情况的
+				show: {
+					isShowSingle: "no",
+					isShowMultiple: "no",
+					isShowAsk: "no",
+					isShowJudge: "no"
+				}
+
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		}
+		}
+	},
+
+	methods: {
+		//顶部导航栏的关闭
+		addNavClickListener() {
+			api.addEventListener({
+				name: 'navitembtn'
+			}, function (ret, err) {
+				api.closeWin();
+			});
+		},
+
+		// 点击【未命名问卷】--->进到创建问卷详情
+		handleInputDesc() {
+			openTabLayout('editDesc', "./editDesc.stml", "编辑标题和描述3")
+
+		},
+		// 点击【添加题目】----》弹出选择创建的题目类型弹窗
+
+		// 点击【设置】----》进入设置页面
+		clickFooterBtn_setting() {
+			openTabLayout("setting", "./setting.stml", "问卷设置")
+
+		},
+		// 点击【预览】----》进入预览页面
+		clickFooterBtn_preview() {
+			openTabLayout("preview", "./preview.stml", "预览")
+		},
+		// 点击【发布】----》进入发布页面
+		clickFooterBtn_publish() {
+			openTabLayout("publish", "./publish.stml", "发布")
+		},
+		// 点击添加题目的时候底部跳出的弹窗---帅景的
+		handleAddTitle() {
+			api.actionSheet({
+				title: '添加题目',
+				cancelTitle: '取消',
+				// 调用的script文件夹里的常量，用map取出来
+				buttons: QUESTION_TYPE.map(i => i.lable),
+			}, function (ret, err) {
+				var index = ret.buttonIndex;
+				const questionType = QUESTION_TYPE.map(i => i.value);
+				const type = questionType[index - 1];
+				openTabLayout(type, "./createQuestion.stml", "新建问卷", { type }, {})
+				// console.log(type)
+				// console.log(questionType)
+
+			});
+		},
+		// 进到创建题目的详情界面-zhu
+		handleAddTitle_z() {
+			openTabLayout("creatQuestion_zhu", './creatQuestion_zhu.stml', "新建问卷-朱")
+
+		},
+		// 保存来自 《editDesc》   界面传来的数据
+		addListenSaveDesc() {
+			const _this = this;
+			api.addEventListener({
+				name: 'edit_save_titleAndDatails'
+			}, function (ret, err) {
+				console.log(JSON.stringify(ret, null, 2))
+				_this.data.questionTitle = ret.value.questionTitle,
+					_this.data.questionContent = ret.value.questionContent,
+					api.toast({
+						msg: "保存成功" + _this.data.questionTitle + _this.data.questionContent
+					});
+
+			})
+		},
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		// 接收来自新建问卷题目的数据，用于控制显示不显示单选多选...
+		addListenCreatSbject() {
+			api.addEventListener({
+				name: 'singleData'
+			}, ret => (
+				// 控制单选题显示
+				this.data.formInfo.show.isShowSingle = "show",
+				// 返回单选题内容
+				console.log(ret.value.key)
+
+			))
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	}
+	},
+
+}
+</script>
+
+
+
+<style>
+/* 最上边的问卷名字及内容 */
+.create_question_btn {
+	align-items: center;
+	margin: 50px 20px;
+}
+.creat_title {
+	margin-bottom: 30px;
+	/* border-bottom: 1px solid silver; */
+}
+.input_title {
+	font-size: 24px;
+	font-weight: bolder;
+}
+.input_placeholder {
+	opacity: 0.4;
+}
+
+/* 添加题目 样式设置 */
+.add_question_btn {
+	align-items: center;
+	margin: 20px 0;
+}
+.add_text {
+	font-size: 18px;
+	color: #3371ff;
+}
+
+/* 设置底部样式 */
+.create {
+	width: 100%;
+	height: 100%;
+	background: #f8f8f8;
+}
+.create_con {
+	flex: 1;
+}
+
+/* 设置下边的样式 */
+.create_footer {
+	justify-content: space-around;
+}
+.footer_btn_icon {
+	height: 18px;
+	width: 18px;
+}
+.publish_btn {
+	height: 44px;
+	border-radius: 22px;
+	width: 300px;
+	background-color: #3371ff;
+	font-size: 18px;
+	color: #fff;
+}
+
+/* 底部变成水平布局 */
+.row_show {
+	flex-direction: row;
+	margin-bottom: 10px;
+}
+
+.footer_btn {
+	background-color: #fff;
+	text-align: center;
+}
+</style>

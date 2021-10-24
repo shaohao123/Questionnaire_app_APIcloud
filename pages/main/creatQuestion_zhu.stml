@@ -1,0 +1,351 @@
+<template>
+	<view class="all_bar" style="height:100%;margin:15px 20px ;">
+		<!-- 1/最上方的选项卡部分 -->
+		<view class="choice_bar">
+			<view class="single_style" @click="choice_change('single')">
+				<view style="margin: auto;">
+					<img src="../../image/danxuan.png" style="height:20px;width:20px;margin:auto;">
+					<text style="color:#fff;margin-top:6px">单选</text>
+				</view>
+			</view>
+			<view class="single_style" @click="choice_change('multiple')">
+				<view style="margin: auto;">
+					<img src="../../image/duoxuan.png" style="height:20px;width:20px;margin:auto;">
+					<text style="color:#fff;margin-top:6px">多选</text>
+				</view>
+			</view>
+			<view class="single_style" @click="choice_change('ask')">
+				<view style="margin: auto;">
+					<img src="../../image/pingfen.png" style="height:20px;width:20px;margin:auto;">
+					<text style="color:#fff;margin-top:6px">问答</text>
+				</view>
+			</view>
+			<view class="single_style" @click="choice_change('judge')">
+				<view style="margin: auto;">
+					<img src="../../image/pingfen.png" style="height:20px;width:20px;margin:auto;">
+					<text style="color:#fff;margin-top:6px">评分</text>
+				</view>
+			</view>
+		</view>
+
+
+		<!-- 2/中间的可滚动部分 -->
+		<scroll-view class="content_bar" style="flex:1">
+			<!--2.1 可变部分-单选 -->
+			<view class="content_options" v-show="this.data.choice === 'single'">
+				<view class="content_title">
+					<view style="margin-top:20px;margin-bottom:5px">
+						<text>题目</text>
+					</view>
+					<view>
+						<textarea 
+						style="height:120px;width:100%" 
+						class="textarea" 
+						placeholder="请输入题目名称(0/100)"
+						maxlength="100" 
+						autofocus 
+						v-model="formInfo.singleTitle"
+						/>
+					</view>
+				</view>
+				<view style="margin-bottom:20px">
+					<text>选项</text>
+				</view>
+				<view v-for="(item,index) in options"
+					style="flex-direction:row;margin-left:20px;margin-bottom:18px">
+					<img src="../../image/delete_btn.png" @click="deleteOption(index)"
+						style="height:24px;width:24px;margin-right:8px">
+					<input name="input" placeholder="请输入选项内容(max40)" class="form_item_con" style="width:90%" />
+				</view>
+				<view @click="addOption" style="flex-direction:row;margin-left:20px;">
+					<img src="../../image/add_btn.png" style="height:24px;width:24px;margin-right:8px">
+					<text @click="addOption">添加选项</text>
+				</view>
+				<!--都有部分-题目设置 -->
+				<view class="content_scope">
+					<view style="margin-top:10px">
+						<text>题目设置</text>
+					</view>
+					<view style="flex-direction:row;justify-content:space-between;margin-top:10px;margin-left:20px">
+						<view>
+							<text style="font-size:14px;opacity:0.7;">此题必填</text>
+						</view>
+						<view>
+							<switch style="height:20px;" checked color="#3371ff" onchange={this.onchange} />
+						</view>
+					</view>
+				</view>
+			</view>
+			<!--2.2 可变部分-多选 -->
+			<view class="content_options" v-show="this.data.choice === 'multiple'">
+				<!-- 问题 -->
+				<view class="content_title">
+					<view style="margin-top:20px;margin-bottom:5px">
+						<text>题目</text>
+					</view>
+					<view>
+						<textarea style="height:120px;width:100%" class="textarea" placeholder="请输入题目名称(0/100)"
+							maxlength="100" autofocus />
+					</view>
+				</view>
+				<view style="margin-bottom:20px">
+					<text>选项</text>
+				</view>
+				<view v-for="(item,index) in options"
+					style="flex-direction:row;margin-left:20px;margin-bottom:18px">
+					<img src="../../image/delete_btn.png" @click="deleteOption(index)"
+						style="height:24px;width:24px;margin-right:8px">
+					<input name="input" placeholder="请输入选项内容(max40)" class="form_item_con" style="width:90%" />
+				</view>
+				<view @click="addOption" style="flex-direction:row;margin-left:20px;">
+					<img src="../../image/add_btn.png" style="height:24px;width:24px;margin-right:8px">
+					<text @click="addOption">添加选项</text>
+				</view>
+				<!--都有部分-题目设置 -->
+				<view class="content_scope">
+					<view style="margin-top:10px">
+						<text>题目设置</text>
+					</view>
+					<view style="flex-direction:row;justify-content:space-between;margin-top:10px;margin-left:20px">
+						<view>
+							<text style="font-size:14px;opacity:0.7;">此题必填</text>
+						</view>
+						<view>
+							<switch style="height:20px;" checked color="#3371ff" onchange={this.onchange} />
+						</view>
+					</view>
+				</view>
+			</view>
+			<!--2.3 可变部分-问答 -->
+			<view class="content_options" v-show="this.data.choice === 'ask'">
+				<!-- 问题 -->
+				<view class="content_title">
+					<view style="margin-top:20px;margin-bottom:5px">
+						<text>题目</text>
+					</view>
+					<view>
+						<textarea style="height:120px;width:100%" class="textarea" placeholder="请输入题目名称(0/100)"
+							maxlength="100" autofocus />
+					</view>
+				</view>
+				<view style="margin-bottom:6px">
+					<text>输入框提示</text>
+				</view>
+				<view>
+					<textarea style="height:120px;width:100%" class="textarea" placeholder="默认提示(请输入)" maxlength="100"
+						autofocus />
+				</view>
+				<!--都有部分-题目设置 -->
+				<view class="content_scope">
+					<view style="margin-top:10px">
+						<text>题目设置</text>
+					</view>
+					<view style="flex-direction:row;justify-content:space-between;margin-top:10px;margin-left:20px">
+						<view>
+							<text style="font-size:14px;opacity:0.7;">此题必填</text>
+						</view>
+						<view>
+							<switch style="height:20px;" checked color="#3371ff" onchange={this.onchange} />
+						</view>
+					</view>
+				</view>
+			</view>
+			<!--2.4 可变部分-评分 -->
+			<view class="content_options" v-show="this.data.choice === 'judge'">
+				<!-- 问题 -->
+				<view class="content_title">
+					<view style="margin-top:20px;margin-bottom:5px">
+						<text>题目</text>
+					</view>
+					<view>
+						<textarea style="height:120px;width:100%" class="textarea" placeholder="请输入题目名称(0/100)"
+							maxlength="100" autofocus />
+					</view>
+				</view>
+				<!-- 五角星和低分高分部分 -->
+				<view style="width:75%;margin:auto">
+					<view style="flex-direction: row;justify-content:space-between">
+						<view v-for="item in starlist">
+							<img :src="`../../image/${item <= value ? 'starActive' : 'star'}.png`"
+								style="height:22px;width:22px;" @click="updateScore(item)">
+						</view>
+					</view>
+					<view style="flex-direction: row;justify-content:space-between;margin-top:5px">
+						<view>
+							<!-- <text >{{lowscore||低分描述}}</text> -->
+							<text v-model="lowscore">{{lowscore || "低分"}} </text>
+						</view>
+						<view>
+							<!-- <text >{{highscore||高分描述}}</text> -->
+							<text v-model="highscore">{{highscore || "高分"}}</text>
+						</view>
+					</view>
+				</view>
+				<!-- 低分描述和高分描述部分 -->
+				<view>
+					<view style="margin:30px 0 20px 0">
+						<text>低分描述</text>
+					</view>
+					<input type="text" placeholder="请输入(0/10)" style="width:100%;font-size:13px;opecity:0.5"
+						onconfirm={this.onconfirm} v-model="lowscore" maxlength="10">
+				</view>
+				<view>
+					<view style="margin:20px 0 20px 0">
+						<text>高分描述</text>
+					</view>
+					<input type="text" placeholder="请输入(0/10)" v-model="highscore"
+						style="width:100%;font-size:13px;opecity:0.5" maxlength="10">
+				</view>
+				<!-- 都有部分，设置 -->
+				<view class="content_scope">
+					<view style="margin-top:10px">
+						<text>题目设置</text>
+					</view>
+					<view style="flex-direction:row;justify-content:space-between;margin-top:10px;margin-left:20px">
+						<view>
+							<text style="font-size:14px;opacity:0.7;">此题必填</text>
+						</view>
+						<view>
+							<switch style="height:20px;" checked color="#3371ff" onchange={this.onchange} />
+						</view>
+					</view>
+				</view>
+
+			</view>
+		</scroll-view>
+
+
+		<!-- 3/最下方的确定按钮 -->
+		<view class="bottom_ensure_btn" @click="ensureBth">
+			<view class="bottom_ensure_btn_inner">
+				<text style="color:#fff">确定</text>
+			</view>
+		</view>
+	</view>
+</template>
+
+<script>
+export default {
+	name: "creatQuestion_zhu",
+	apiready() {
+		this.addNavClickListener();
+	},
+	data() {
+		return {
+			
+			// 单选，多选的选项
+			options: ["", "", "", ""],
+			// v-show 显示单选 多选 问答 评分 的
+			choice: "judge",
+			// 星星列表的个数
+			starlist: [1, 2, 3, 4, 5],
+			// 低分描述和高分描述
+			lowscore: "",
+			highscore: "",
+			// 控制星星的
+			value: 3,
+			// 判断创建问卷详情的界面的题目有没有数据的
+			formInfo:{
+				singleTitle: null
+			}
+
+		}
+	},
+	methods: {
+		//顶部导航栏的关闭
+		addNavClickListener() {
+			api.addEventListener({
+				name: 'navitembtn'
+			}, function (ret, err) {
+				api.closeWin();
+			});
+		},
+		// <!--2.2 可变部分-选项/问答/评分 -->
+		addOption() {
+			this.data.options.push("")
+		},
+		deleteOption(index) {
+			this.data.options.splice(index, 1)
+		},
+		// v-show选择四个选项
+		choice_change(value) {
+			this.data.choice = value
+			api.toast({
+				msg: `你点击了${value}`
+			})
+		},
+		// 获取输入框输入内容
+		onconfirm(e) {
+			api.toast({
+				msg: e.detail.value
+			})
+			// 获取输入框的内容同时同步到低分描述 和高分描述的位置 ---暂未实现
+			// this.lowscore = e
+		},
+		// 点击星星会亮的
+		updateScore(item) {
+			this.data.value = item;
+		},
+		// 创建好问卷之后点击确定
+		ensureBth() {
+			if (this.formInfo.singleTitle) {
+				api.sendEvent({
+					name: 'singleData',
+					    extra: {
+						key: '这里是点击确定按钮之后出现的内容,未来要放置单选题的标题和选项',
+					}
+				})
+			}
+			api.closeWin()
+			console.log(this.data.formInfo.singleTitle)
+		},
+		// 获取单选框的内容
+
+	}
+}
+</script>
+
+<style>
+/* <!-- 1/最上方的选项卡部分 --> */
+.choice_bar {
+	flex-direction: row;
+}
+.single_style {
+	height: 76px;
+	width: 80px;
+	background-color: #3371ff;
+	border-radius: 5%;
+	margin: auto;
+}
+/* <!-- 2/中间的可滚动部分 --> */
+.content_bar {
+	/* border: 4px solid rgb(149, 199, 149); */
+}
+.content_title {
+	height: 160px;
+	width: 100%;
+	/* border: 4px solid #000; */
+}
+
+/* <!--2.1 固定部分-题目部分 --> */
+.content_scope {
+	/* border: 2px solid #000; */
+}
+/* <!--2.2 可变部分-选项/问答/评分 --> */
+.content_options {
+	/* border: 2px solid pink; */
+	margin: 20px 0 20px 0;
+}
+/* <!-- 3/最下方的确定按钮 --> */
+.bottom_ensure_btn {
+	align-items: center;
+}
+.bottom_ensure_btn_inner {
+	height: 50px;
+	width: 90%;
+	background-color: #3371ff;
+	border-radius: 50%;
+	align-items: center;
+	justify-content: center;
+}
+</style>

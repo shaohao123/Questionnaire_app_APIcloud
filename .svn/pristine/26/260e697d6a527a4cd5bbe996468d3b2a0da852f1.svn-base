@@ -1,0 +1,150 @@
+<template>
+	<view style="height:100%;width:100%">
+		<view style="flex:1">
+			<!-- 头部 -->
+			<view class="mq_header">
+				<view class="mq_header_bg">
+					<img src="../../image/myquestionbg.png">
+				</view>
+				<view class="mq_header_text">
+					<img src="../../image/myquestiontext.png">
+				</view>
+			</view>
+			<!-- 中间问卷列表 -->
+			<scroll-view class="mq_list">
+				<!-- 1 -->
+				<view class="mq_list_detail" @click="gotoAnalysisResult">
+					<view>
+						<img src="../../image/questionlisttitle.png"
+							style="width:60px; hight:60px; margin: 10px 30px 10px 30px">
+					</view>
+					<view style="margin:12px 10px">
+						<text style="font-size:20px ; font-weight:800">这里显示问卷名称</text>
+						<text style="opacity:0.4 ;margin-top:10px">回收量：????</text>
+					</view>
+				</view>
+				<!-- 2 -->
+				<view class="mq_list_detail" @click="gotoAnalysisResult">
+					<view>
+						<img src="../../image/questionlisttitle.png"
+							style="width:60px; hight:60px; margin: 10px 30px 10px 30px">
+					</view>
+					<view style="margin:12px 10px">
+						<text style="font-size:20px ; font-weight:800">这里显示问卷名称</text>
+						<text style="opacity:0.4 ;margin-top:10px">回收量：????</text>
+					</view>
+				</view>
+				<!-- 3 -->
+				<view class="mq_list_detail" @click="gotoAnalysisResult">
+					<view>
+						<img src="../../image/questionlisttitle.png"
+							style="width:60px; hight:60px; margin: 10px 30px 10px 30px">
+					</view>
+					<view style="margin:12px 10px">
+						<text style="font-size:20px ; font-weight:800">这里显示问卷名称</text>
+						<text style="opacity:0.4 ;margin-top:10px">回收量：????</text>
+					</view>
+				</view>
+				<!-- 4 -->
+				<view class="mq_list_detail" @click="gotoAnalysisResult">
+					<view>
+						<img src="../../image/questionlisttitle.png"
+							style="width:60px; hight:60px; margin: 10px 30px 10px 30px">
+					</view>
+					<view style="margin:12px 10px">
+						<text style="font-size:20px ; font-weight:800">这里显示问卷名称</text>
+						<text style="opacity:0.4 ;margin-top:10px">回收量：????</text>
+					</view>
+				</view>
+			</scroll-view>
+		</view>
+		<!-- 创建新问卷按钮 -->
+		<view class="mq_newques" @click="newQuestion">
+			<view class="mq_newques_con">
+				<!-- <view class="mq_newques_btn_img">
+					<img src="../../image/add.png">
+				</view> -->
+				<view class="mq_newques_btn_text">
+					<text class="mq_newques_btn_text_inner">+ 创建新问卷</text>
+				</view>
+			</view>
+		</view>
+	</view>
+</template>
+
+<script>
+import { openTabLayout } from "../../script/utils"
+export default {
+	name: "myQuestionList",
+	apiready() {
+
+	},
+
+	methods: {
+		// 创建新问卷
+		newQuestion() {
+			openTabLayout("newQuestion", "./newQuestion.stml", "新建问卷")
+		},
+		// 显示问卷详细分析数据
+		gotoAnalysisResult() {
+			openTabLayout("quesAnalysis", "./quesAnalysis.stml", "问卷详情")
+
+
+		},
+
+
+	}
+
+}
+</script>
+
+<style>
+/* 设置图片大小 */
+.mq_header_text {
+	width: 130px;
+	height: 40px;
+	margin-top: -80px;
+	margin-left: 40px;
+}
+.mq_header_bg {
+	width: 100%;
+	height: 180px;
+}
+
+/* 中间部分外框设置 */
+.mq_list {
+	margin-top: 70px;
+}
+.mq_list_detail {
+	height: 80px;
+	width: 100%;
+	border: 1px solid silver;
+}
+
+/* ’创建新问卷‘ 按钮设置 */
+.mq_newques {
+	/* position: fixed; */
+	flex-direction: row;
+	background-color: #3371ff;
+	border-radius: 50%;
+	height: 52px;
+	width: 40%;
+	margin: 0 auto 12px auto;
+}
+.mq_newques_con {
+	flex-direction: row;
+	margin: auto;
+}
+.mq_newques_btn_text_inner {
+	color: #fff;
+	font-size: 20px;
+}
+.mq_newques_btn_text {
+	margin-left: 5px;
+}
+
+/* 中间问卷调查的list里边的内容调整 */
+.mq_list_detail {
+	flex-direction: row;
+}
+</style>

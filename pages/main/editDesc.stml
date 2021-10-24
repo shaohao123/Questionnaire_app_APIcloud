@@ -1,0 +1,102 @@
+<!--编辑标题和描述    第三个界面-->
+<template>
+	<view class="edit_whole">
+		<view class="edit">
+			<view class="edit_title">
+				<text>问卷标题</text>
+				<textarea class="edit_title_textarea" placeholder="请输入问卷标题，50个字以内" v-model="questionTitle"></textarea>
+			</view>
+			<view class="edit_content">
+				<text>问卷描述</text>
+				<textarea class="edit_content_textarea" placeholder="请填写问卷描述" v-model="questionContent"></textarea>
+			</view>
+		</view>
+
+		<view>
+			<button class="edit_btn edit_save" @click="save_title_details">保存</button>
+		</view>
+	</view>
+</template>
+
+<script>
+import { openTabLayout } from "../../script/utils"
+export default {
+	name: "editDesc",
+	apiready() {
+		this.addNavClickListener();
+	},
+	data() {
+		return {
+			questionTitle: "",
+			questionContent: "",
+		}
+	},
+	methods: {
+		//顶部导航栏的关闭
+		addNavClickListener() {
+			api.addEventListener({
+				name: 'navitembtn'
+			}, function (ret, err) {
+				api.closeWin();
+			});
+		},
+		// 底部点击保存之后的保存与跳转
+		save_title_details() {
+			api.closeWin()
+			api.sendEvent({
+				name: 'edit_save_titleAndDatails',
+				extra: {
+					questionTitle: this.questionTitle,
+					questionContent: this.questionContent
+
+
+				}
+			})
+		}
+
+
+	}
+
+}
+</script>
+
+<style>
+.edit_title_textarea {
+	height: 150px;
+	width: 95%;
+	margin: 0 auto;
+}
+
+.edit_content_textarea {
+	height: 400px;
+	width: 95%;
+	margin: 0 auto;
+}
+text {
+	margin-left: 3%;
+	font-size: 20px;
+	font-weight: 400;
+}
+
+/* 设置底部 */
+.edit_whole {
+	width: 100%;
+	height: 100%;
+}
+.edit {
+	flex: 1;
+}
+.edit_save {
+	height: 50px;
+	width: 90%;
+	background-color: #3371ff;
+	border-radius: 50%;
+	align-items: center;
+	justify-content: center;
+	margin: 0 auto 6px auto;
+	
+}
+.edit_btn {
+	font-size: 20rem;
+}
+</style>

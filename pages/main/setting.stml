@@ -1,0 +1,226 @@
+<!--设置页   第四个界面-->
+<template>
+	<view class="setting_con ">
+		<view class="setting_item_box1 row_show " @click="setting_whoCanFill">
+			<text class="setting_item_box1_who">谁可以填写</text>
+			<view class="setting_item_box1_visible row_show right">
+				<text>公开可见</text>
+				<img src="../../image/jiantou.png" alt="select" style="width:18px; height:18px;">
+			</view>
+		</view>
+		<view class="setting_item_box2  ">
+			<view class="setting_item_box2_first">
+				<view>
+					<text style="line-height:30px">匿名填写</text>
+				</view>
+				<!-- switch 按钮 -->
+				<view class="switch-box">
+					<switch class="switch-scale" color="#3371FF" height="22px" width="40px" checked
+						onchange={this.onchange} />
+				</view>
+			</view>
+
+			<view class="setting_item_box2_anonymous_switch row_show ">
+				<text class="setting_item_box2_anonymous_switch_text">开启后，将不会记录用户的个人信息</text>
+			</view>
+		</view>
+
+		<view class="setting_item_box3 row_show " @click="setting_indate">
+			<text class="setting_item_box3_time">问卷有效期</text>
+			<view class="setting_item_box3_time_choose row_show right">
+				<text>{{this.data.valid_period || "永久有效"}}</text>
+				<img src="../../image/jiantou.png" alt="select" style="width:18px; height:18px;">
+			</view>
+		</view>
+
+		<view class="setting_item_box4 row_show " @click="setting_fillcount">
+			<text class="setting_item_box4_times">每位用户填写次数</text>
+			<view class="setting_item_box4_times_choose row_show right">
+				<text>{{fillCountTimes || "不限制"}}</text>
+				<img src="../../image/jiantou.png" alt="select" style="width:18px; height:18px;">
+			</view>
+		</view>
+	</view>
+</template>
+
+<script>
+import { openTabLayout } from "../../script/utils"
+export default {
+
+	name: "setting",
+	apiready() {
+		this.addNavClickListener();
+		// 监听的是【每位用户填写次数】界面
+		this.listenFillCount()
+		// 监听【问卷有效期界面】
+		this.listenIndate()
+	},
+	data() {
+		return {
+			// fillcount
+			fillCountTimes: null,
+			// indate
+			valid_period :null
+		}
+	},
+	methods: {
+		//顶部导航栏的关闭
+		addNavClickListener() {
+
+			api.addEventListener({
+				name: 'navitembtn'
+			}, function (ret, err) {
+				api.closeWin();
+			});
+		},
+		// 点击【谁可以填写11】--->进到  发布范围  界面
+		setting_whoCanFill() {
+			openTabLayout("whoCanFill", "./whoCanFill.stml", "发布范围")
+		},
+		// 匿名填写的switch按钮
+		onchange(e) {
+			api.toast({
+				msg:e.detail.value ? '已开启' : '已关闭'
+			})
+		},
+
+		// 保存在临时的storage里，setting里边的数据保持，到fillcount里边
+		// api.setPrefs({
+		// 	key: 'fillCountTimes',
+		// 	value:fillCountTimes
+		// })
+
+
+
+
+
+
+
+
+
+
+
+
+
+		// 监听事件-【setting<<---indate】 先获取参数(之前设置的，或者默认的)
+		listenIndate() {
+			_this = this;
+			api.addEventListener({
+				name: 'update_indate'
+			}, function (ret, err) {
+				_this.data.valid_period = ret.value.key
+			})
+		},
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		// 发送事件-【setting--->>indate】 后向下传递参数---pageParam 
+		setting_indate() {
+			openTabLayout("setting_indate", "./indate.stml", "问卷有效期",{key:this.valid_period})
+		},
+
+
+
+
+
+
+
+		// 监听事件-【setting<<---fillcount】 先获取参数(之前设置的，或者默认的)
+		listenFillCount() {
+			_this = this;
+			api.addEventListener({
+				name: 'FillCountTimes'
+			}, function (ret, err) {
+				_this.data.fillCountTimes = ret.value.key;
+			})
+		},
+		// 发送事件-【setting--->>fillcount】 后向下传递参数---sendEvent+setTimeout 
+		setting_fillcount() {
+			openTabLayout("fillcount", "./fillcount.stml", "每位用户填写次数");
+			_this = this
+			setTimeout(
+				function () {
+					api.sendEvent({
+						name: 'judgeFillCountState_name',
+						extra: {
+							key: _this.data.fillCountTimes,
+						}
+					})
+				}
+				, 300)
+
+		},
+	}
+
+}
+</script>
+
+<style>
+/* 设置整体的位置 */
+.setting_con {
+	margin: 20px 30px;
+}
+
+/* 设置全部普通的样式 */
+.setting_item_box1,
+.setting_item_box3,
+.setting_item_box4 {
+	height: 55px;
+	border-bottom: 1px solid #E9ECF3;
+
+}
+text {
+	line-height: 60px;
+	font-size: 18px;
+}
+/* 元素横着排 */
+.row_show {
+	flex-direction: row;
+}
+img {
+	margin: auto 0px;
+	margin-right: 10px;
+	margin-left: 8px;
+}
+.right {
+	margin-left: auto;
+}
+/* 设置匿名填写的样式 */
+.setting_item_box2 {
+	margin-top: 16px;
+	border-bottom: 1px solid #E9ECF3;
+
+
+}
+
+.setting_item_box2_first {
+	flex-direction: row;
+	justify-content: space-between;
+}
+.setting_item_box2_anonymous_switch {
+	margin-top: -10px;
+}
+.setting_item_box2_anonymous_switch_text {
+	opacity: 0.5;
+	font-size: 14px;
+}
+text {
+	font-size: 15px;
+}
+</style>

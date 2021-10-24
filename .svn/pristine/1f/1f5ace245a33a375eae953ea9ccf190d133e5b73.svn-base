@@ -1,0 +1,405 @@
+<!--问卷详细数据分析页面-->
+<template>
+	<view>
+		<!-- 上半部分 -->
+		<view class="header_bg">
+			<view class="header_textandicon">
+				<view class="header_describe">
+					<text style="color:#fff;font-size:18px;font-weight:bold"> 问卷标题</text>
+				</view>
+				<view style="flex-direction:row; justify-content: space-between; ">
+					<!-- 时间，总回收量 -->
+					<view class="header_">
+						<text style="color:#fff;font-size:12px">创建时间：？？？？</text>
+						<text style="color:#fff;font-size:12px">总回收量：？？？？</text>
+					</view>
+					<!-- 编辑和分享按钮 -->
+					<view style="flex-direction:row;">
+						<view
+							style="height:34px; width:54px; border-radius:50%; border:1px solid #fff;margin-right:8px;"
+							@click="edit">
+							<img src="../../image/edit.png" style="hight:20px; width:20px; margin:auto">
+						</view>
+						<view style="height:34px; width:54px; border-radius:50%; border:1px solid #fff " @click="share">
+							<img src="../../image/share.png" style="hight:20px; width:20px; margin:auto">
+						</view>
+					</view>
+				</view>
+			</view>
+		</view>
+		<!-- 中间部分1：数据统计+提交记录 -->
+		<view style="background-color:#8eb2f5">
+			<view class="middle_bar">
+				<view class="middle_tab">
+					<view @click="dataAnalysis">
+						<text style="height:30px;color:#FFF;font-weight:bold">数据统计</text>
+					</view>
+					<view @click="submitRecord">
+						<text style="height:30px;color:#FFF;font-weight:bold ">提交记录</text>
+					</view>
+				</view>
+			</view>
+		</view>
+
+		<!-- 中间的数据统计部分和下边的导出邮箱部分 -->
+		<view class="middle_and_bottom" style="width:100%; height:100%">
+			<scroll-view class="middle_all" style="flex:1;">
+				<!-- 中间部分2：数据统计部分-->
+				<view v-show="type === 'dataAnalysisControl'">
+					<scroll-view style="padding:20px 40px 10px 40px;">
+						<!-- 单选题 -->
+						<view class="multiple_choice" style="margin-bottom:50px">
+							<view class="multiple_choice_text">
+								<text style="font-size:17px;font-weight: bold; ">1.(单选题)你的名字</text>
+							</view>
+							<view style="margin-top:8px">
+								<text style="font-size:12px; opacity:0.3">8次填写</text>
+							</view>
+							<!-- 每道题的四个选项框 -->
+							<view>
+								<view style="margin-top:10px">
+									<view style="flex-direction:row; justify-content:space-between">
+										<view>
+											<text>0-10岁</text>
+										</view>
+										<view>
+											<text>5(17)%</text>
+										</view>
+									</view>
+									<slider value="17"></slider>
+								</view>
+								<view style="margin-top:10px">
+									<view style="flex-direction:row; justify-content:space-between">
+										<view>
+											<text>10-20岁</text>
+										</view>
+										<view>
+											<text>1(3)%</text>
+										</view>
+									</view>
+									<slider value="3"></slider>
+								</view>
+								<view style="margin-top:10px">
+									<view style="flex-direction:row; justify-content:space-between">
+										<view>
+											<text>20-30岁</text>
+										</view>
+										<view>
+											<text>20(69)%</text>
+										</view>
+									</view>
+									<slider value="90"></slider>
+								</view>
+								<view style="margin-top:10px">
+									<view style="flex-direction:row; justify-content:space-between">
+										<view>
+											<text>30-40岁</text>
+										</view>
+										<view>
+											<text>3(10)%</text>
+										</view>
+									</view>
+									<slider value="10"></slider>
+								</view>
+
+
+							</view>
+
+						</view>
+						<!-- 多选题 -->
+						<view class="multiple_choice" style="margin-bottom:50px">
+							<view class="multiple_choice_text">
+								<text style="font-size:17px; font-weight: bold;">2.(多选题)他的名字</text>
+							</view>
+							<view style="margin-top:8px">
+								<text style="font-size:12px; opacity:0.3">8次填写</text>
+							</view>
+							<!-- 每道题的四个选项框 -->
+							<view>
+								<view style="margin-top:10px">
+									<view style="flex-direction:row; justify-content:space-between">
+										<view>
+											<text>0-10岁</text>
+										</view>
+										<view>
+											<text>5(17)%</text>
+										</view>
+									</view>
+									<slider value="17"></slider>
+								</view>
+								<view style="margin-top:10px">
+									<view style="flex-direction:row; justify-content:space-between">
+										<view>
+											<text>10-20岁</text>
+										</view>
+										<view>
+											<text>1(3)%</text>
+										</view>
+									</view>
+									<slider value="3"></slider>
+								</view>
+								<view style="margin-top:10px">
+									<view style="flex-direction:row; justify-content:space-between">
+										<view>
+											<text>20-30岁</text>
+										</view>
+										<view>
+											<text>20(69)%</text>
+										</view>
+									</view>
+									<slider value="90"></slider>
+								</view>
+								<view style="margin-top:10px">
+									<view style="flex-direction:row; justify-content:space-between">
+										<view>
+											<text>30-40岁</text>
+										</view>
+										<view>
+											<text>3(10)%</text>
+										</view>
+									</view>
+									<slider value="10"></slider>
+								</view>
+
+
+							</view>
+
+						</view>
+						<!-- 评分题 -->
+						<view class="multiple_choice" style="margin-bottom:50px">
+							<view class="multiple_choice_text">
+								<text style="font-size:17px; font-weight: bold;">3.(评分题)我的名字</text>
+							</view>
+							<view style="margin-top:8px">
+								<text style="font-size:12px; opacity:0.3">8次填写</text>
+							</view>
+							<!-- 每道题的四个选项框 -->
+							<view>
+								<view style="margin-top:10px">
+									<view style="flex-direction:row; justify-content:space-between">
+										<view>
+											<text>0-10岁</text>
+										</view>
+										<view>
+											<text>5(17)%</text>
+										</view>
+									</view>
+									<slider value="17"></slider>
+								</view>
+								<view style="margin-top:10px">
+									<view style="flex-direction:row; justify-content:space-between">
+										<view>
+											<text>10-20岁</text>
+										</view>
+										<view>
+											<text>1(3)%</text>
+										</view>
+									</view>
+									<slider value="3"></slider>
+								</view>
+								<view style="margin-top:10px">
+									<view style="flex-direction:row; justify-content:space-between">
+										<view>
+											<text>20-30岁</text>
+										</view>
+										<view>
+											<text>20(69)%</text>
+										</view>
+									</view>
+									<slider value="90"></slider>
+								</view>
+								<view style="margin-top:10px">
+									<view style="flex-direction:row; justify-content:space-between">
+										<view>
+											<text>30-40岁</text>
+										</view>
+										<view>
+											<text>3(10)%</text>
+										</view>
+									</view>
+									<slider value="10"></slider>
+								</view>
+							</view>
+						</view>
+					</scroll-view>
+				</view>
+				<!-- 中间部分3：提交记录部分-->
+				<view v-show="type === 'submitRecordControl'">
+					<list-view id="listView" class="main" enable-back-to-top onscrolltolower={this.onscrolltolower}
+						style="padding:20px 0 0 40px;">
+						<cell class="cell" onclick={this.itemClick}>
+							<view style="flex-direction:row;">
+								<view>
+									<img src="../../image/avatar_demo.png">
+								</view>
+								<view style="margin-left:10px">
+									<text class="title">{item.title}</text>
+									<text class="subtitle" >{item.subtitle}</text>
+								</view>
+							</view>
+						</cell>
+						<list-footer class="footer">
+							<text>加载中...</text>
+						</list-footer>
+					</list-view>
+				</view>
+			</scroll-view>
+			<!-- 底部：导出到邮箱 -->
+			<view style="height:46px; width:90%; background-color:#3371FF; border-radius:50%; margin: auto; bottom:6px"
+				@click="ExportToMail">
+				<text style="margin:auto;color:#fff; ">导出数据到邮箱</text>
+			</view>
+		</view>
+	</view>
+</template>
+
+<script>
+export default {
+	name: "quesAnalysis",
+	apiready() {
+		this.addNavClickListener();
+		this.initData(false);
+	},
+	data() {
+		return ({
+			type: "dataAnalysisControl"
+		})
+	},
+	methods: {
+		//顶部导航栏的关闭
+		addNavClickListener() {
+			api.addEventListener({
+				name: 'navitembtn'
+			}, function (ret, err) {
+				api.closeWin();
+			});
+		},
+		// 编辑
+		edit() {
+			api.toast({
+				msg: '点击了{编辑}'
+			})
+		},
+		// 分享
+		share() {
+			api.toast({
+				msg: '点击了{分享}'
+			})
+		},
+		// 数据统计
+		dataAnalysis() {
+			this.data.type = "dataAnalysisControl",
+				api.toast({
+					msg: '点击了{数据统计}'
+				})
+		},
+		// 提交记录
+		submitRecord() {
+			api.toast({
+				msg: '点击了{提交记录}'
+			}),
+				this.data.type = "submitRecordControl"
+		},
+		// 导出数据到邮箱
+		ExportToMail() {
+			api.toast({
+				msg: '点击了{导出数据到邮箱}'
+			})
+
+		},
+		// list-view 部分
+		initData(loadMore) {
+			var that = this;
+			var skip = that.dataList ? that.dataList.length : 0;
+			var dataList = [];
+			for (var i = 0; i < 20; i++) {
+				dataList[i] = {
+					title: '项目' + (i + skip),
+					subtitle: '这里是子标题'
+				}
+			}
+			var listView = document.getElementById('listView');
+			if (loadMore) {
+				that.dataList = that.dataList.concat(dataList);
+				listView.insert({
+					data: dataList
+				});
+			} else {
+				that.dataList = dataList;
+				listView.load({
+					data: dataList
+				});
+			}
+		},
+		onscrolltolower() {
+			this.initData(true);
+		},
+		itemClick(e) {
+			api.alert({
+				msg: '当前项索引：' + e.currentTarget.index + "  frame"
+			});
+		}
+
+
+	}
+
+}
+</script>
+
+<style>
+/* 设置头部的样式 */
+.header_bg {
+	background: url(../../image/questionAnalysisBgc.png);
+	height: 170px;
+	width: 100%;
+}
+
+.header_textandicon {
+	padding: 20px 20px 0px 20px;
+}
+.header_describe {
+	margin: 14px 0 10px -5px;
+}
+
+/* 中间部分的-数据统计+提交记录 */
+.middle_bar {
+	/* background-color: rgb(192, 207, 240); */
+	/* border: 5px solid #000; */
+	margin: 10px;
+}
+.middle_tab {
+	flex-direction: row;
+	justify-content: space-around;
+	/* border: 2px solid red; */
+	/* margin: 10px ; */
+}
+
+/* lsit-view 的样式 */
+.main {
+	width: 100%;
+	height: 100%;
+}
+.cell {
+	padding: 8px;
+	height: 60px;
+	border-bottom: 0.5px solid #8eb2f5;
+	background-color: #fff;
+}
+.cell:active {
+	background-color: #ddd;
+}
+.title {
+	font-weight: bold;
+	font-size: 17px;
+	color: #000;
+}
+.subtitle {
+	color: #333;
+	opacity: 0.5;
+	font-size: 13px;
+}
+.footer {
+	justify-content: center;
+	align-items: center;
+}
+</style>
